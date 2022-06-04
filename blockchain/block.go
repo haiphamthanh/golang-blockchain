@@ -6,16 +6,16 @@ import (
 )
 
 /* DEFINATIONs */
+// TODO: 4. Make a BlockChain struct
+type BlockChain struct {
+	Blocks []*Block
+}
+
 // TODO: 1. Define Block struct
 type Block struct {
 	Hash     []byte
 	Data     []byte
 	PrevHash []byte
-}
-
-// TODO: 4. Make a BlockChain struct
-type BlockChain struct {
-	blocks []*Block
 }
 
 /* BODY OF CODE */
@@ -38,9 +38,9 @@ func CreateBlock(data string, prevHash []byte) *Block {
 
 // TODO: 5. Add block to chain
 func (chain *BlockChain) AddBlock(data string) {
-	prevBlock := chain.blocks[len(chain.blocks)-1]
+	prevBlock := chain.Blocks[len(chain.Blocks)-1]
 	new := CreateBlock(data, prevBlock.Hash)
-	chain.blocks = append(chain.blocks, new)
+	chain.Blocks = append(chain.Blocks, new)
 }
 
 // TODO: 6. Make a inititial block
