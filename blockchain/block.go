@@ -1,18 +1,7 @@
 package blockchain
 
-import (
-	"bytes"
-	"crypto/sha256"
-	"math/big"
-)
-
 /* DEFINATIONs */
-// TODO: 4. Make a BlockChain struct
-type BlockChain struct {
-	Blocks []*Block
-}
-
-// TODO: 1. Define Block struct
+// Make a BlockChain struct
 type Block struct {
 	Hash     []byte
 	Data     []byte
@@ -20,58 +9,50 @@ type Block struct {
 	Nonce    int
 }
 
-/* BODY OF CODE */
-// TODO: 2. Make deriveHash
-func (b *Block) DeriveHash() {
-	info := bytes.Join([][]byte{b.Data, b.PrevHash}, []byte{})
-	hash := sha256.Sum256(info)
-	b.Hash = hash[:]
+type BlockChain struct {
+	Blocks []*Block
 }
 
-// TODO: 3. Create a block
-// func CreateBlock(data string, prevHash []byte) *Block {
-// 	// 1. Create a new block with empty hash byte
-// 	block := &Block{[]byte{}, []byte(data), prevHash}
-// 	// 2. Fill your hash
-// 	block.DeriveHash()
-// 	// 3. Return the block
-// 	return block
+/* BODY OF CODE */
+// Make deriveHash
+// func (b *Block) DeriveHash() {
+// 	info := bytes.Join([][]byte{b.Data, b.PrevHash}, []byte{})
+// 	hash := sha256.Sum256(info)
+// 	b.Hash = hash[:]
 // }
+
+// Create a new block
 func CreateBlock(data string, prevHash []byte) *Block {
 	block := &Block{[]byte{}, []byte(data), prevHash, 0}
-	pow := NewProof(block)
-	nonce, hash := pow.Run()
-
-	block.Hash = hash
-	block.Nonce = nonce
-
+	buildData(block)
 	return block
 }
 
-// TODO: 5. Add block to chain
+// Add block to chain
 func (chain *BlockChain) AddBlock(data string) {
 	prevBlock := chain.Blocks[len(chain.Blocks)-1]
 	new := CreateBlock(data, prevBlock.Hash)
 	chain.Blocks = append(chain.Blocks, new)
 }
 
-// TODO: 6. Make a inititial block
+// Create an inititial block
 func Genesis() *Block {
 	return CreateBlock("Genesis", []byte{})
 }
 
-// TODO: 7. Make Init BlockChain
+// Build first block in chain
 func InitBlockChain() *BlockChain {
 	return &BlockChain{[]*Block{Genesis()}}
 }
 
-// Other
-func (pow *ProofOfWork) Validate() bool {
-	var intHash big.Int
-	data := pow.InitData(pow.Block.Nonce)
+/* Data construction functions */
+func buildData(block *Block) {
+	// Oldway: block.DeriveHash()
 
-	hash := sha256.Sum256(data)
-	intHash = *intHash.SetBytes(hash[:])
+	// Use proof
+	pow := NewProof(block)
+	nonce, hash := pow.findNonceAndHash()
 
-	return intHash.Cmp(pow.Target) == -1
+	block.Hash = hash
+	block.Nonce = nonce
 }

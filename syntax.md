@@ -13,3 +13,8 @@
 2. Run go system
    - go run main.go: Run single file <main>
    - go mod init github.com/haiphamthanh/golang-blockchain
+
+
+# Kiến thức về block-chain
+   - Là một chuỗi các khối được định nghĩa bởi một danh sách liên kết
+   - 
